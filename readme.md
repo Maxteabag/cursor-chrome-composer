@@ -1,33 +1,6 @@
 # Chrome Debug Monitor
 
-A powerful Node.js-based tool for monitoring Chrome's console logs and network activity in real-time. Perfect for debugging web applications, monitoring API calls, and tracking network issues.
-
-## Features
-
-- 🔍 Real-time console log monitoring integrated with Cursor Composer
-
-## Prerequisites
-
-- Node.js (v12 or higher)
-- npm or yarn
-- Google Chrome
-
-## Installation
-
-1. Clone the repository:
-
-```bash
-git clone https://github.com/yourusername/chrome-debug-monitor.git
-cd chrome-debug-monitor
-```
-
-2. Install dependencies:
-
-```bash
-npm install
-# or
-yarn install
-```
+A powerful integration between Chrome's DevTools Protocol and Cursor Composer for real-time debugging and monitoring.
 
 ## Usage
 
@@ -61,23 +34,16 @@ Create a file named `chrome-debugging-setup.txt` with this content:
 
 ```bash
 npm install ws
-```
-
-### 3. Follow the Instructions
-
-Ask the composer to run debugging per `chrome-debugging-setup.txt` and then you the composer has access to your chrome console logs and network requests
-
-## Output Format
-
-All debug information will be displayed in your terminal:
 
 ```
-[Console] Your application logs
-[Network] Network requests and responses
-[Error] Any errors or warnings
-```
 
-You can press Ctrl+C at any time to stop monitoring.
+### 3. Create the .JS file
+
+Create a file named `cursor-composer.js` with this content: [cursor-composer.js](cursor-composer.js)
+
+### 4. Prompt the agent
+
+Ask the cursor composer (agent mode) to run debugging per `chrome-debugging-setup.txt` and then you the composer has access to your chrome console logs and network requests.
 
 ## Output Examples
 
