@@ -1,0 +1,18 @@
+# Chrome Remote Debugging Instructions:
+1. Start Chrome with remote debugging:
+   Start-Process 'C:\Program Files\Google\Chrome\Application\chrome.exe' -ArgumentList '--remote-debugging-port=9222','--user-data-dir=remote-profile'
+
+2. Monitor console logs using Node.js:
+   a. List available pages and get their IDs:
+      node cursor-composer.js
+   
+   b. Monitor a specific page (replace PAGE_ID with the ID from step a):
+      node cursor-composer.js PAGE_ID
+
+   Example workflow:
+   - List all pages: node console-monitor.js
+   - Monitor specific page: node console-monitor.js EFB832E67F11C7266B1E519787E31F41
+   - Stop monitoring: Press Ctrl+C
+
+3. Navigate to specific URL:
+   curl -X PUT "http://localhost:9222/json/new?url=http://localhost:8080"
