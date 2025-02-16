@@ -45,6 +45,15 @@ Create a file named `cursor-composer.js` with this content: [cursor-composer.js]
 
 Ask the cursor composer (agent mode) to run debugging per `chrome-debugging-setup.txt` and then you the composer has access to your chrome console logs and network requests.
 
+Important: You must make sure the agent runs the command NOT in the composer chat as an embedded terminal - but as a terminal as a editor, so the application doesn't shut down automatically and you can keep in the context across composers. 
+
+## Example screenshots
+
+![step2](https://github.com/user-attachments/assets/ddeab00b-dc42-40b2-8d0b-de4fb536860d)
+
+![step3](https://github.com/user-attachments/assets/0d691b12-977e-42ea-806a-4d1089b08125)
+
+
 ## Output Examples
 
 ### Console Logs
