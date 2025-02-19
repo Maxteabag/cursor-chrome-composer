@@ -1,5 +1,7 @@
 import { BaseMonitor } from "./BaseMonitor";
 
+//This is an example on how you can combine playwright automation with the monitor for effective debugging with the agent
+
 export class LoginTask extends BaseMonitor {
   private readonly email = "test@test.com";
   private readonly password = "testtests";

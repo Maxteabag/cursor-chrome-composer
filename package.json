@@ -1,0 +1,19 @@
+{
+  "devDependencies": {
+    "@types/node": "^22.13.4"
+  },
+  "name": "cursor-chrome-composer",
+  "version": "1.0.0",
+  "description": "A powerful integration between Chrome's DevTools Protocol and Cursor Composer for real-time debugging and monitoring.",
+  "main": "cursor-composer.js",
+  "dependencies": {
+    "playwright": "^1.50.1",
+    "undici-types": "^6.20.0"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
+}

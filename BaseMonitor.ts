@@ -1,4 +1,4 @@
-import { chromium, Page, Browser, ConsoleMessage, Request, Worker, Dialog, BrowserContext } from "playwright";
+import { chromium, Page, Browser, ConsoleMessage, Request, Response, Worker, Dialog, BrowserContext } from "playwright";
 
 export class BaseMonitor {
   protected browser: Browser | null = null;
@@ -85,7 +85,7 @@ export class BaseMonitor {
       });
 
       // Monitor responses
-      this.page.on("response", async (response) => {
+      this.page.on("response", async (response: Response) => {
         const status = response.status();
         const url = response.url();
         console.log(`[Response] ${status} ${url}`);

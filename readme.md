@@ -9,50 +9,71 @@ A powerful integration between Chrome's DevTools Protocol and Cursor Composer fo
 Create a file named `chrome-debugging-setup.txt` with this content:
 
 ```
-# Chrome Remote Debugging Instructions:
-1. Start Chrome with remote debugging:
-   Start-Process 'C:\Program Files\Google\Chrome\Application\chrome.exe' -ArgumentList '--remote-debugging-port=9222','--user-data-dir=remote-profile'
+# Chrome Debugging Instructions:
+1. Install dependencies:
+   npm install playwright typescript ts-node
 
-2. Monitor console logs using Node.js:
-   a. List available pages and get their IDs:
-      node console-monitor.js
+2. Run the TypeScript monitor:
+   ts-node BaseMonitor.ts [URL] [options]
 
-   b. Monitor a specific page (replace PAGE_ID with the ID from step a):
-      node console-monitor.js PAGE_ID
+   Available options:
+   --network, -n        : Monitor network requests
+   --no-clear, --nc    : Don't clear console on page reload
+   --exit-on-error     : Exit on encountering errors (good for iterative debugging)
+   --break-network, --bn: Treat network errors as breaking errors
 
-   Example workflow:
-   - List all pages: node console-monitor.js
-   - Monitor specific page: node console-monitor.js EFB832E67F11C7266B1E519787E31F41
-   - Stop monitoring: Press Ctrl+C
+   Example:
+   ts-node BaseMonitor.ts http://localhost:8080 --network
 
-3. Navigate to specific URL:
-   curl -X PUT "http://localhost:9222/json/new?url=http://localhost:8080"
-   (modify the ports and urls if desired)
+Note: Playwright will automatically handle Chrome instance creation and setup.
 ```
 
-### 2. Install WebSocket Dependency
+### 2. Install Dependencies
 
 ```bash
-npm install ws
-
+npm install playwright typescript ts-node  # Includes Playwright with types
+npm install --save-dev @types/node       # Required for Node.js types
 ```
 
-### 3. Create the .JS file
+### 3. Configure TypeScript
 
-Create a file named `cursor-composer.js` with this content: [cursor-composer.js](cursor-composer.js)
+Create a `tsconfig.json` file in your project root. You can find the complete configuration here: [@tsconfig.json](tsconfig.json)
 
-### 4. Prompt the agent
+The configuration provides:
 
-Ask the cursor composer (agent mode) to run debugging per `chrome-debugging-setup.txt` and then you the composer has access to your chrome console logs and network requests.
+- Modern JavaScript target (ES2020)
+- CommonJS module system
+- DOM and ES2020 type definitions
+- Strict type checking
+- Module resolution for Node.js
+- Output directory configuration
 
-Important: You must make sure the agent runs the command NOT in the composer chat as an embedded terminal - but as a terminal as a editor, so the application doesn't shut down automatically and you can keep in the context across composers. 
+### 4. Create BaseMonitor.ts
+
+Create a file named `BaseMonitor.ts` with the TypeScript implementation. You can find the complete implementation here: [@BaseMonitor.ts](BaseMonitor.ts)
+
+The monitor provides:
+
+- Full TypeScript support
+- Playwright-based monitoring
+- Comprehensive error handling
+- Network request monitoring
+- Console logging
+- Worker monitoring
+- Dialog handling
+- Configurable error behaviors
+
+### 5. Prompt the agent
+
+Ask the cursor composer (agent mode) to run debugging per `chrome-debugging-setup.txt` and then the composer has access to your chrome console logs and network requests.
+
+Important: You must make sure the agent runs the command NOT in the composer chat as an embedded terminal - but as a terminal as a editor, so the application doesn't shut down automatically and you can keep in the context across composers.
 
 ## Example screenshots
 
 ![step2](https://github.com/user-attachments/assets/ddeab00b-dc42-40b2-8d0b-de4fb536860d)
 
 ![step3](https://github.com/user-attachments/assets/0d691b12-977e-42ea-806a-4d1089b08125)
-
 
 ## Output Examples
 
@@ -61,13 +82,17 @@ Important: You must make sure the agent runs the command NOT in the composer cha
 ```
 [log] NODE_ENV: development
 [warning] Logging in because its an existing user
+[Request] GET http://localhost:8080/api/customers
+[Response] 200 http://localhost:8080/api/customers
+[Worker Started] http://localhost:8080/worker.js
+[Dialog] alert: Please confirm your action
 ```
 
 ### Network Requests
 
 ```
-[Network Request] GET http://localhost:8080/api/customers
-[Network Response] 200 OK - http://localhost:8080/api/customers
+[Request] GET http://localhost:8080/api/customers
+[Response] 200 OK - http://localhost:8080/api/customers
 [Response Body] {
   "id": 1,
   "name": "John Doe",
@@ -77,24 +102,25 @@ Important: You must make sure the agent runs the command NOT in the composer cha
 
 ## Configuration
 
-The script monitors:
+The TypeScript monitor (`BaseMonitor.ts`) provides comprehensive monitoring of:
 
 - Console logs (all levels)
-- Network requests
-- Response bodies (automatically parsed for JSON)
-- Network errors
-- Runtime messages
+- Network requests and responses
+- Page errors and runtime exceptions
+- Web Workers
+- Dialog boxes (alerts, confirms, prompts)
+- Custom error handling behaviors
 
 ## Advanced Usage
 
 ### Monitor Multiple Pages
 
-Run multiple instances of the monitor for different pages:
+You can monitor multiple pages by running multiple instances with different URLs:
 
 ```bash
-node console-monitor.js <page-id-1>
+ts-node BaseMonitor.ts http://localhost:8080 --network
 # In another terminal
-node console-monitor.js <page-id-2>
+ts-node BaseMonitor.ts http://localhost:3000 --network
 ```
 
 ### Cleanup

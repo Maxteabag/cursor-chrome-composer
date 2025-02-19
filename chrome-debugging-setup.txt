@@ -1,18 +1,18 @@
-# Chrome Remote Debugging Instructions:
-1. Start Chrome with remote debugging:
-   Start-Process 'C:\Program Files\Google\Chrome\Application\chrome.exe' -ArgumentList '--remote-debugging-port=9222','--user-data-dir=remote-profile'
+# Chrome Debugging Instructions:
+1. Install dependencies:
+   npm install playwright typescript ts-node
+   npm install --save-dev @types/node
 
-2. Monitor console logs using Node.js:
-   a. List available pages and get their IDs:
-      node cursor-composer.js
-   
-   b. Monitor a specific page (replace PAGE_ID with the ID from step a):
-      node cursor-composer.js PAGE_ID
+2. Run the TypeScript monitor:
+   ts-node BaseMonitor.ts [URL] [options]
 
-   Example workflow:
-   - List all pages: node console-monitor.js
-   - Monitor specific page: node console-monitor.js EFB832E67F11C7266B1E519787E31F41
-   - Stop monitoring: Press Ctrl+C
+   Available options:
+   --network, -n        : Monitor network requests
+   --no-clear, --nc    : Don't clear console on page reload
+   --exit-on-error     : Exit on encountering errors (good for iterative debugging)
+   --break-network, --bn: Treat network errors as breaking errors
 
-3. Navigate to specific URL:
-   curl -X PUT "http://localhost:9222/json/new?url=http://localhost:8080"
+   Example:
+   ts-node BaseMonitor.ts http://localhost:8080 --network
+
+Note: Playwright will automatically handle Chrome instance creation and setup.
