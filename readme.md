@@ -67,7 +67,10 @@ The monitor provides:
 
 Ask the cursor composer (agent mode) to run debugging per `chrome-debugging-setup.txt` and then the composer has access to your chrome console logs and network requests.
 
-Important: You must make sure the agent runs the command NOT in the composer chat as an embedded terminal - but as a terminal as a editor, so the application doesn't shut down automatically and you can keep in the context across composers.
+Important: If you are monitor your own usage: You must make sure the agent runs the command NOT in the composer chat as an embedded terminal - but as a terminal as a editor, so the application doesn't shut down automatically and you can keep in the context across composers.
+
+You can also use it for iterative automatic debugging, in this case, make sure the agent runs it embedded in the composer, so when the monitor closes down, it can read the console error, make code changes, and try again.
+Do try this workflow, make sure that --exit-on-error is true and that you use playwright to navigate your site. You can see [@Logintask.ts](LoginTask.ts) for an example
 
 ## Example screenshots
 
