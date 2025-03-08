@@ -11,10 +11,10 @@ Create a file named `chrome-debugging-setup.txt` with this content:
 ```
 # Chrome Debugging Instructions:
 1. Install dependencies:
-   npm install playwright typescript ts-node
+   npm install playwright
 
-2. Run the TypeScript monitor:
-   ts-node BaseMonitor.ts [URL] [options]
+2. Run the JavaScript monitor:
+   node BaseMonitor.js [URL] [options]
 
    Available options:
    --network, -n        : Monitor network requests
@@ -23,7 +23,7 @@ Create a file named `chrome-debugging-setup.txt` with this content:
    --break-network, --bn: Treat network errors as breaking errors
 
    Example:
-   ts-node BaseMonitor.ts http://localhost:8080 --network
+   node BaseMonitor.js http://localhost:8080 --network
 
 Note: Playwright will automatically handle Chrome instance creation and setup.
 ```
@@ -31,30 +31,15 @@ Note: Playwright will automatically handle Chrome instance creation and setup.
 ### 2. Install Dependencies
 
 ```bash
-npm install playwright typescript ts-node  # Includes Playwright with types
-npm install --save-dev @types/node       # Required for Node.js types
+npm install playwright  # Includes Playwright for browser automation
 ```
 
-### 3. Configure TypeScript
+### 3. Create BaseMonitor.js
 
-Create a `tsconfig.json` file in your project root. You can find the complete configuration here: [@tsconfig.json](tsconfig.json)
-
-The configuration provides:
-
-- Modern JavaScript target (ES2020)
-- CommonJS module system
-- DOM and ES2020 type definitions
-- Strict type checking
-- Module resolution for Node.js
-- Output directory configuration
-
-### 4. Create BaseMonitor.ts
-
-Create a file named `BaseMonitor.ts` with the TypeScript implementation. You can find the complete implementation here: [@BaseMonitor.ts](BaseMonitor.ts)
+Create a file named `BaseMonitor.js` with the JavaScript implementation. You can find the complete implementation here: [@BaseMonitor.js](BaseMonitor.js)
 
 The monitor provides:
 
-- Full TypeScript support
 - Playwright-based monitoring
 - Comprehensive error handling
 - Network request monitoring
@@ -63,14 +48,11 @@ The monitor provides:
 - Dialog handling
 - Configurable error behaviors
 
-### 5. Prompt the agent
+### 4. Prompt the agent
 
 Ask the cursor composer (agent mode) to run debugging per `chrome-debugging-setup.txt` and then the composer has access to your chrome console logs and network requests.
 
-Important: If you are monitor your own usage: You must make sure the agent runs the command NOT in the composer chat as an embedded terminal - but as a terminal as a editor, so the application doesn't shut down automatically and you can keep in the context across composers.
-
-You can also use it for iterative automatic debugging, in this case, make sure the agent runs it embedded in the composer, so when the monitor closes down, it can read the console error, make code changes, and try again.
-Do try this workflow, make sure that --exit-on-error is true and that you use playwright to navigate your site. You can see [@Logintask.ts](LoginTask.ts) for an example
+Important: You must make sure the agent runs the command NOT in the composer chat as an embedded terminal - but as a terminal as a editor, so the application doesn't shut down automatically and you can keep in the context across composers.
 
 ## Example screenshots
 
@@ -105,7 +87,7 @@ Do try this workflow, make sure that --exit-on-error is true and that you use pl
 
 ## Configuration
 
-The TypeScript monitor (`BaseMonitor.ts`) provides comprehensive monitoring of:
+The JavaScript monitor (`BaseMonitor.js`) provides comprehensive monitoring of:
 
 - Console logs (all levels)
 - Network requests and responses
@@ -121,9 +103,9 @@ The TypeScript monitor (`BaseMonitor.ts`) provides comprehensive monitoring of:
 You can monitor multiple pages by running multiple instances with different URLs:
 
 ```bash
-ts-node BaseMonitor.ts http://localhost:8080 --network
+node BaseMonitor.js http://localhost:8080 --network
 # In another terminal
-ts-node BaseMonitor.ts http://localhost:3000 --network
+node BaseMonitor.js http://localhost:3000 --network
 ```
 
 ### Cleanup
