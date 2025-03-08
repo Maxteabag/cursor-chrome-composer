@@ -1,27 +1,22 @@
-import { chromium, Page, Browser, ConsoleMessage, Request, Response, Worker, Dialog, BrowserContext } from "playwright";
+const { chromium } = require('playwright');
 
-export class BaseMonitor {
-  protected browser: Browser | null = null;
-  protected context: BrowserContext | null = null;
-  protected page: Page | null = null;
-  protected monitorNetwork: boolean = false;
-  protected clearConsoleOnReload: boolean = true;
-  protected exitOnError: boolean = false;
-  protected treatNetworkErrorsAsBreaking: boolean = false;
-
+class BaseMonitor {
   constructor(
-    monitorNetwork: boolean = false,
-    clearConsoleOnReload: boolean = true,
-    exitOnError: boolean = false,
-    treatNetworkErrorsAsBreaking: boolean = false
+    monitorNetwork = false,
+    clearConsoleOnReload = true,
+    exitOnError = false,
+    treatNetworkErrorsAsBreaking = false
   ) {
+    this.browser = null;
+    this.context = null;
+    this.page = null;
     this.monitorNetwork = monitorNetwork;
     this.clearConsoleOnReload = clearConsoleOnReload;
     this.exitOnError = exitOnError;
     this.treatNetworkErrorsAsBreaking = treatNetworkErrorsAsBreaking;
   }
 
-  async initialize(url: string = "http://localhost:8080") {
+  async initialize(url = "http://localhost:8080") {
     try {
       this.browser = await chromium.launch({
         headless: false,
@@ -40,16 +35,16 @@ export class BaseMonitor {
 
       // Keep the browser open
       await new Promise(() => {});
-    } catch (error: unknown) {
+    } catch (error) {
       this.handleError("Initialization Error", error);
     }
   }
 
-  protected setupMonitoring() {
+  setupMonitoring() {
     if (!this.page) return;
 
     // Monitor console logs
-    this.page.on("console", (msg: ConsoleMessage) => {
+    this.page.on("console", (msg) => {
       const type = msg.type();
       const text = msg.text();
 
@@ -70,13 +65,13 @@ export class BaseMonitor {
     });
 
     // Monitor page errors
-    this.page.on("pageerror", (error: Error) => {
+    this.page.on("pageerror", (error) => {
       this.handleError("Page Error", error);
     });
 
     if (this.monitorNetwork) {
       // Monitor requests
-      this.page.on("request", (request: Request) => {
+      this.page.on("request", (request) => {
         console.log(`[Request] ${request.method()} ${request.url()}`);
         const postData = request.postData();
         if (postData) {
@@ -85,7 +80,7 @@ export class BaseMonitor {
       });
 
       // Monitor responses
-      this.page.on("response", async (response: Response) => {
+      this.page.on("response", async (response) => {
         const status = response.status();
         const url = response.url();
         console.log(`[Response] ${status} ${url}`);
@@ -114,23 +109,23 @@ export class BaseMonitor {
     });
 
     // Monitor workers
-    this.page.on("worker", (worker: Worker) => {
+    this.page.on("worker", (worker) => {
       console.log(`[Worker Started] ${worker.url()}`);
       worker.evaluate(() => {
-        self.addEventListener("console", (event: any) => {
+        self.addEventListener("console", (event) => {
           console.log(`[Worker Console] ${event.data}`);
         });
       });
     });
 
     // Monitor dialogs
-    this.page.on("dialog", async (dialog: Dialog) => {
+    this.page.on("dialog", async (dialog) => {
       console.log(`[Dialog] ${dialog.type()}: ${dialog.message()}`);
       await dialog.dismiss();
     });
   }
 
-  protected handleError(type: string, error: unknown) {
+  handleError(type, error) {
     console.error(`\n[BREAKING] ${type}:`);
     console.error("Error Message:", error instanceof Error ? error.message : String(error));
     console.error("Stack Trace:", error instanceof Error ? error.stack : "No stack trace available");
@@ -156,12 +151,7 @@ if (require.main === module) {
   // Parse command line flags
   const monitorNetwork = args.includes("--network") || args.includes("-n");
   const noClear = args.includes("--no-clear") || args.includes("--nc");
-
-  // Especially useful for recursive debugging in an embedded terminal in the composer
-  // Because when the composer stumbles upon an error, they will stop the proccess immediately, read the error, make changes, and try again iteratively
   const exitOnError = args.includes("--exit-on-error") || args.includes("--exit");
-
-  // When enabled, network errors (404s, failed resources, etc.) will trigger the error handler
   const breakOnNetwork = args.includes("--break-network") || args.includes("--bn");
 
   const monitor = new BaseMonitor(monitorNetwork, !noClear, exitOnError, breakOnNetwork);
@@ -177,3 +167,5 @@ if (require.main === module) {
     }
   })();
 }
+
+module.exports = BaseMonitor; 
